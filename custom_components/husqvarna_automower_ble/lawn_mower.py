@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 
+from automower_ble.protocol import MowerState, MowerActivity
+
 from homeassistant.components import bluetooth
 from homeassistant.components.lawn_mower import (
     LawnMowerActivity,
@@ -73,8 +75,8 @@ class AutomowerLawnMower(HusqvarnaAutomowerBleEntity, LawnMowerEntity):
         if self.coordinator.data is None:
             return None
 
-        state = str(self.coordinator.data["state"])
-        activity = str(self.coordinator.data["activity"])
+        state = self.coordinator.data["state"]
+        activity = self.coordinator.data["activity"]
 
         if state is None:
             return None
@@ -82,21 +84,31 @@ class AutomowerLawnMower(HusqvarnaAutomowerBleEntity, LawnMowerEntity):
         if activity is None:
             return None
 
-        if state == "paused":
+        if state == MowerState.PAUSED:
             return LawnMowerActivity.PAUSED
-        if state in ("stopped", "off", "waitForSafetyPin"):
+        if state in (
+            MowerState.WAIT_FOR_SAFETYPIN,
+            MowerState.STOPPED,
+            MowerState.FATAL_ERROR,
+            MowerState.ERROR,
+        ):
             # This is actually stopped, but that isn't an option
             return LawnMowerActivity.ERROR
         if state in (
-            "restricted",
-            "inOperation",
-            "unknown",
-            "checkSafety",
-            "pendingStart",
+            MowerState.PENDING_START,
+            MowerState.IN_OPERATION,
+            MowerState.RESTRICTED,
         ):
-            if activity in ("charging", "parked", "none"):
+            if activity in (
+                MowerActivity.CHARGING,
+                MowerActivity.PARKED,
+            ):
                 return LawnMowerActivity.DOCKED
-            if activity in ("goingOut", "mowing", "goingHome"):
+            if activity in (
+                MowerActivity.GOING_OUT,
+                MowerActivity.MOWING,
+                MowerActivity.GOING_HOME,
+            ):
                 return LawnMowerActivity.MOWING
         return LawnMowerActivity.ERROR
 
