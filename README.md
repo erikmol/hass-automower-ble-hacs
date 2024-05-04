@@ -1,0 +1,1 @@
+This a testing repo compatible with HACS for this [pull request](https://github.com/home-assistant/core/pull/108326).

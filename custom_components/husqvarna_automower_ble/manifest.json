@@ -7,10 +7,18 @@
       "connectable": true
     }
   ],
-  "codeowners": ["@alistair23"],
+  "codeowners": [
+    "@alistair23"
+  ],
   "config_flow": true,
-  "dependencies": ["bluetooth_adapters"],
+  "dependencies": [
+    "bluetooth_adapters"
+  ],
   "documentation": "https://www.home-assistant.io/integrations/???",
   "iot_class": "local_polling",
-  "requirements": ["automower-ble==0.1.33"]
+  "requirements": [
+    "git+https://github.com/alistair23/AutoMower-BLE.git@main#automower_ble"
+  ],
+  "version": "0.1.0",
+  "issue_tracker": "https://github.com/alistair23/AutoMower-BLE/issues"
 }
