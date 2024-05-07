@@ -17,8 +17,8 @@
   "documentation": "https://www.home-assistant.io/integrations/???",
   "iot_class": "local_polling",
   "requirements": [
-    "git+https://github.com/alistair23/AutoMower-BLE.git@main#automower_ble"
+    "git+https://github.com/erikmol/AutoMower-BLE.git@hacstesting#automower_ble"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "issue_tracker": "https://github.com/alistair23/AutoMower-BLE/issues"
 }
