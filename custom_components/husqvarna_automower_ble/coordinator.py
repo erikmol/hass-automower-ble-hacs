@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime,timedelta
 import logging
 from typing import Any
 
@@ -123,4 +123,8 @@ class HusqvarnaAutomowerBleEntity(CoordinatorEntity[Coordinator]):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        return self.coordinator.mower.is_connected()
+        # Check if we got a response (self.coordinator.mower.last_response) in the last 5 minutes:
+        if self.coordinator.mower.last_response is not None:
+            if (datetime.now() - self.coordinator.mower.last_response) < timedelta(minutes=5):
+                return True
+        return False
