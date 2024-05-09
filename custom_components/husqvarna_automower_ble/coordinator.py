@@ -7,6 +7,7 @@ import logging
 from typing import Any
 
 from automower_ble.mower import Mower
+from automower_ble.protocol import MowerActivity
 from bleak import BleakError
 from bleak_retry_connector import close_stale_connections_by_address
 
@@ -101,6 +102,10 @@ class Coordinator(DataUpdateCoordinator[dict[str, bytes]]):
             _LOGGER.error("Error getting data from device")
             await self._async_find_device()
             raise UpdateFailed("Error getting data from device") from err
+
+        # Disconnect if parked to force a reconnect next time
+        if data["activity"] == MowerActivity.PARKED and self.mower.is_connected():
+            await self.mower.disconnect()
 
         return data
 
